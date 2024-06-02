@@ -2,16 +2,19 @@ import time  # подключаем библиотеку чтобы задейс
 import numpy as np
 import serial  # подключаем библиотеку для последовательной связи
 import serial.tools.list_ports
+import itertools
 
 try:
     #вывод на экран доступных портов
     ports = serial.tools.list_ports.comports()
+    print('I found this ports:')
     for port in ports:
         print(port.device)
 
     #инициализируем СОМ-порт
-    ArduinoSerial = serial.Serial('COM5', 9600, timeout=1)  # создаем объект для работы с портом последовательной связи
+    ArduinoSerial = serial.Serial('COM3', 9600, timeout=1)  # создаем объект для работы с портом последовательной связи
     time.sleep(2)  # ждем 2 секунды чтобы установилась последовательная связь
+    print('Serial connection is open')
 
     receivedList = np.zeros(7)
     while ArduinoSerial.isOpen():
@@ -24,7 +27,7 @@ try:
             if ' ' in data or data.count('.') > 1:
                 data = 0
 
-            receivedList[i] = float(data)
+            receivedList[i] = data
 
         dict = {'accX' : receivedList[0],
                 'accY' : receivedList[1],
